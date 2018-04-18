@@ -13,13 +13,10 @@ import time
 import pandas as pd
 import math
 
+#Calculate Euclidean distances using Haversine formula
+
 class Haversine:
     '''
-    use the haversine class to calculate the distance between
-    two lon/lat coordnate pairs.
-    output distance available in kilometers, meters, miles, and feet.
-    example usage: Haversine([lon1,lat1],[lon2,lat2]).feet
-    
     '''
     def __init__(self,coord1,coord2):
         lon1,lat1=coord1
@@ -38,15 +35,7 @@ class Haversine:
         c=2*math.atan2(math.sqrt(a),math.sqrt(1-a))
         
         self.km=self.meters/1000.0              # output distance in kilometers
-
-xcoord = CompleteData['lat']
-ycoord = CompleteData['long']
-cattle = CompleteData['cattle']
-sheep = CompleteData['sr']
-vac = CompleteData['vaccine']
-
-#Calculate Haversine distances
-
+        
 dist = np.zeros(shape=(292,292))
         
 for i in range(0,291):
@@ -54,6 +43,46 @@ for i in range(0,291):
         dist[i,j] = Haversine((CompleteData['lat'][i],CompleteData['long'][i]),(CompleteData['lat'][j],CompleteData['long'][j])).km
 
 dist = dist/100
+        
+
+#Plot spatial distribution of farms sharing water/grazing areas for each study
+
+plt.scatter(study16['lat'], study16['long'], c = 'gray', alpha = 0.8)
+plt.scatter(study16['lat'][study16['water_grazing'] == 1], study16['long'][study16['water_grazing'] == 1], c = 'red')
+
+plt.scatter(study17['lat'], study17['long'], c = 'gray', alpha = 0.8)
+plt.scatter(study17['lat'][study17['water_grazing'] == 1], study17['long'][study17['water_grazing'] == 1], c = 'red')
+
+plt.scatter(study18['lat'], study18['long'], c = 'gray', alpha = 0.8)
+plt.scatter(study18['lat'][study18['water_grazing'] == 1], study18['long'][study18['water_grazing'] == 1], c = 'red')
+
+plt.scatter(study19['lat'], study19['long'], c = 'gray', alpha = 0.8)
+plt.scatter(study19['lat'][study19['water_grazing'] == 1], study19['long'][study19['water_grazing'] == 1], c = 'red')
+
+plt.scatter(study20['lat'], study20['long'], c = 'gray', alpha = 0.8)
+plt.scatter(study20['lat'][study20['water_grazing'] == 1], study20['long'][study20['water_grazing'] == 1], c = 'red')
+
+plt.scatter(study21['lat'], study21['long'], c = 'gray', alpha = 0.8)
+plt.scatter(study21['lat'][study21['water_grazing'] == 1], study21['long'][study21['water_grazing'] == 1], c = 'red')
+
+plt.scatter(study22['lat'], study22['long'], c = 'gray', alpha = 0.8)
+plt.scatter(study22['lat'][study22['water_grazing'] == 1], study22['long'][study22['water_grazing'] == 1], c = 'red')
+
+plt.scatter(study24['lat'], study24['long'], c = 'gray', alpha = 0.8)
+plt.scatter(study24['lat'][study24['water_grazing'] == 1], study24['long'][study24['water_grazing'] == 1], c = 'red')
+
+plt.scatter(study25['lat'], study25['long'], c = 'gray', alpha = 0.8)
+plt.scatter(study25['lat'][study25['water_grazing'] == 1], study25['long'][study25['water_grazing'] == 1], c = 'red')
+
+plt.scatter(study26['lat'], study26['long'], c = 'gray', alpha = 0.8)
+plt.scatter(study26['lat'][study26['water_grazing'] == 1], study26['long'][study26['water_grazing'] == 1], c = 'red')
+
+xcoord = CompleteData['lat']
+ycoord = CompleteData['long']
+cattle = CompleteData['cattle']
+sheep = CompleteData['sr']
+vac = CompleteData['vaccine']
+wg = CompleteData['wg']
 
 #Parameter values
         
