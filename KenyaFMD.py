@@ -34,6 +34,7 @@ class Haversine:
            math.sin(delta_lambda/2.0)**2
         c=2*math.atan2(math.sqrt(a),math.sqrt(1-a))
         
+        self.meters=R*c
         self.km=self.meters/1000.0              # output distance in kilometers
         
 dist = np.zeros(shape=(292,292))
