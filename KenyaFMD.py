@@ -37,10 +37,10 @@ class Haversine:
         self.meters=R*c
         self.km=self.meters/1000.0              # output distance in kilometers
         
-dist = np.zeros(shape=(292,292))
+dist = np.zeros(shape=(342,342))
         
-for i in range(0,291):
-    for j in range(0,291):
+for i in range(0,342):
+    for j in range(0,342):
         dist[i,j] = Haversine((CompleteData['lat'][i],CompleteData['long'][i]),(CompleteData['lat'][j],CompleteData['long'][j])).km
 
 dist = dist/100
@@ -94,9 +94,9 @@ zeta = 2.80
 chi = 0.403
 phi = 0.799
 rho = 0.000863
-epsilon = 0.02 #Vaccine parameter
-s = np.random.negative_binomial(50, 50/55, 292) #Draw latent periods
-r = np.random.negative_binomial(30, 30/38, 292) #Draw infectious periods
+epsilon = 0.20 #Vaccine parameter
+s = np.random.negative_binomial(50, 50/55, 342) #Draw latent periods
+r = np.random.negative_binomial(30, 30/38, 342) #Draw infectious periods
 
 #Calculate distance kernel
 K = psi/(psi**2 + dist**2)   
@@ -104,23 +104,24 @@ K = psi/(psi**2 + dist**2)
 
 #Calculate susceptibility
 
-beta1 = np.zeros(292)
+beta1 = np.zeros(342)
 beta1 = nu*(xi*(cattle)**chi + (sheep)**chi)
 
-for i in range(0,291):
+for i in range(0,342):
     if (CompleteData['vaccine'][i] == 1):
        beta1[i] = epsilon*beta1[i]
 
 #Choose initial cases
        
 t = 0
-A = np.zeros(shape=(292,5))
-output = np.zeros(shape=(292,6))       
+A = np.zeros(shape=(342,5))
+output = np.zeros(shape=(1000,6))     
+numInf = np.zeros(10000)  
 
-initial1 = random.randint(0,291)
+initial1 = random.randint(0,342)
 initial2 = initial1+1
 initial3 = initial2+1
-I = np.zeros(292)
+I = np.zeros(342)
 I[initial1] = 2
 I[initial2] = 2
 I[initial3] = 2
@@ -129,16 +130,17 @@ A[1, ] = [initial2, 0, s[initial2], r[initial2], vac[initial2]]
 A[2, ] = [initial3, 0, s[initial3], r[initial3], vac[initial3]]
 
 start_time = time.time()
-while sum(I == 1) + sum(I == 2) > 0:
+while t < 10000:
 
 #Calculate transmission rate
 
+    numInf[t] = sum(I == 2)
     t = t + 1
-    print("Day", t, "Exposed", sum(I == 1), "Infected", sum(I == 2), "Culled", sum(I == 3))
+    print("Day", t, "Susceptible", sum(I == 0), "Exposed", sum(I == 1), "Infected", sum(I == 2))
 
-    beta = np.zeros(292)
+    beta = np.zeros(342)
 
-    for j in range(0,291):
+    for j in range(0,342):
         beta[j] = beta1[j]*(np.sum((zeta*(cattle[I == 2]**chi) + sheep[I == 2]**chi)*K[I == 2, j]))
 
 #Calculate probability of infection
@@ -147,9 +149,9 @@ while sum(I == 1) + sum(I == 2) > 0:
     
 #Infect if probability is less that a uniform sample
 
-    unif = np.random.uniform(0, 1, 292)
+    unif = np.random.uniform(0, 1, 342)
 
-    for i in range(0,291):
+    for i in range(0,342):
         if (unif[i] <= prob_inf[i] and I[i] == 0):
             I[i] =  1
             su = sum(I != 0)
@@ -160,8 +162,8 @@ while sum(I == 1) + sum(I == 2) > 0:
         
     inf = A[:,0][A[:,1] + A[:,2] == t] #Move to I state once latent period is over
     I[inf.astype(np.int64)] = 2
-    rem = A[:,0][A[:,1] + A[:,2] + A[:,3] == t] #Move to R state once infectious period is over
-    I[rem.astype(np.int64)] = 3
+    rem = A[:,0][A[:,1] + A[:,2] + A[:,3] == t] #Move to S state once infectious period is over
+    I[rem.astype(np.int64)] = 0
     out = sum(output[:,1] != 0)
     plt.scatter(xcoord, ycoord, c = 'gray', alpha = 0.05)
     plt.scatter(output[0:out, 2], output[0:out, 3], c = 'red')
@@ -174,3 +176,5 @@ while sum(I == 1) + sum(I == 2) > 0:
             output[out + i,] = [rem[i], t - A[i,2] - A[i,3], xcoord[rem.astype(np.int64)[i]], ycoord[rem.astype(np.int64)[i]], cattle[rem.astype(np.int64)[i]], sheep[rem.astype(np.int64)[i]]]
 
 output = output[0:out,]
+
+plt.scatter(xcoord[I == 2], ycoord[I == 2], c = 'red')
