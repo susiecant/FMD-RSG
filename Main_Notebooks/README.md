@@ -10,5 +10,6 @@ Here we can update each other on what each file contains (a brief summary) to ma
     4. equipment
     5. vet
     6. contact with humans and animals
+    
 This can be used to create the sparse matrices ([https://cmdlinetips.com/2018/03/sparse-matrices-in-python-with-scipy/](intro_to_sparse_matrices)
 
