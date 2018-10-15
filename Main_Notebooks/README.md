@@ -13,3 +13,5 @@ Here we can update each other on what each file contains (a brief summary) to ma
     
 This can be used to create the sparse matrices ([Intro_sparse_matrices](https://cmdlinetips.com/2018/03/sparse-matrices-in-python-with-scipy/))
 
+- The notebook `spatial_disease_model.ipynb` takes in the data and sparse matrices from `Attributes_sparse_matrices.ipynb`. It creates a matrix A: farm number by status (where status can be of S,E,I,V,R). This matrix contains random numbers drawn from distributions describing that farms specific infectious periods, recovery periods etc. 
+
