@@ -11,15 +11,28 @@ xsize = size(xcoord);
 N = xsize(1);
 
 cap = 10/100;
-arr = shares_water_list;
+arr = {};
+arr{1} = equipment_list;
+arr{2} = shares_water_list;
+arr{3} = shares_grazing_list;
+arr{4} = shares_milk_list;
+arr{5} = shares_vet_list;
+arr{6} = contact_animal_list;
+arr{7} = contact_human_list;
 
 % A = attributes_matrix(shares_water_list, 10, N, xcoord, ycoord)
 
 % function [row_ind, col_ind, data_arr] = attributes_matrix(arr, cap, n, xcoord, ycoord)
-    row_ind = zeros(50000000,1);
-    col_ind = zeros(50000000,1);
-    data_arr = zeros(50000000,1);
-    parfor i=1:N
+for i=1:7
+    row_ind{i} = [];
+    col_ind{i} = [];
+    data_arr{i} = [];
+end
+parfor l=1:7
+    row_ind1 = [];
+    col_ind1 = [];
+    data_arr1 = [];
+    for i=1:N-1
         xcoordi = xcoord(i)*ones(i+1,1);
         xdistfromicoord = xcoordi-xcoord(1:i+1);
         ycoordi = ycoord(i)*ones(i+1,1);
@@ -29,13 +42,15 @@ arr = shares_water_list;
         for k=1:size(farmIndex)
             j = farmIndex(k);
             if i ~= j
-                if arr(i) + arr(j) == 2
-                    ind = find(row_ind==0,1)
-                    row_ind(ind) = i;
-                    col_ind(ind) = j;
-                    data_arr(ind) = 1;
+                if arr{l}(i) + arr{l}(j) == 2
+                    row_ind1(end+1) = i;
+                    col_ind1(end+1) = j;
+                    data_arr1(end+1) = 1;
                 end
             end
         end
     end
-% end
+    row_ind{l} = row_ind1;
+    col_ind{l} = col_ind1;
+    data_Arr{l} = data_arr1;
+end
