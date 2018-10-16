@@ -17,5 +17,5 @@ This can be used to create the sparse matrices ([Intro_sparse_matrices](https://
 
 - The matlab file `createInds` takes in the file all_Data (which you have to import first - double click from in matlab, and click on import selection). It saves three cells of vectors: row_ind, col_ind and data_Arr, which contain the indices of the farms within 10km of each other. If `parfor` doesn't work, the `par` can be removed, but will take approximately 20 minutes to run rather than 5 or so. By default, MATLAB used 4 workers on my laptop, but this could be increased to 8.
 
--The matlab file `createSparse` creates a sparse matrix from row_ind, col_ind and data_Arr, and so `createInds` needs to be run first. This will output a cell S which contains the sparse matrices for each attribute.
+- The matlab file `createSparse` creates a sparse matrix from row_ind, col_ind and data_Arr, and so `createInds` needs to be run first. This will output a cell S which contains the sparse matrices for each attribute.
 
